@@ -31,8 +31,6 @@ export default function RootLayout({
       >
         <Providers>
           {children}
-          <h1>hi</h1>
-          
           <ErrorAlert />
         </Providers>
       </body>
