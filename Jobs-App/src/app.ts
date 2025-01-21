@@ -21,4 +21,9 @@ app.use('',jobAppRoutes)
 
 
 
+app.get('/alpha', (req, res) => {
+    res.send('Hello World');
+});
+
+
 export default app;
