@@ -5,6 +5,7 @@
   "scripts": {
     "watch": " tsc -w",
     "start": "nodemon dist/server.js",
+    "prodstart": "node dist/server.js",
     "devstart": "node src/server.ts",
     "dev": "nodemon src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
