@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "node src/index.ts",
+    "watch": " tsc -w",
+    "start": "node dist/server.js",
+    "devstart": "node src/server.ts",
     "dev": "nodemon src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
