@@ -7,6 +7,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 const app = express();
 
+app.get('/smith', (req, res) => {
+  res.send('<h1>Hello, world!</h1>');
+});
+
 
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -21,9 +25,6 @@ app.use('',jobAppRoutes)
 
 
 
-app.get('/alpha', (req, res) => {
-    res.send('Hello World');
-});
 
 
 export default app;
