@@ -15,7 +15,15 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
   }));
 
-app.use(express.json());
+  app.use(express.json());
+
+
+// test api 
+app.get('/test', (req, res) => {
+  res.send('App is working');
+});
+// ------------------------------
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('',jobAppRoutes)
 
