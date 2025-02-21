@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
   res.send("app is working ");
 });
 
