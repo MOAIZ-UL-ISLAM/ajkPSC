@@ -7,18 +7,21 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-app.get("/smith", (req, res) => {
-  res.send("<h1>world!</h1>");
-});
+
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: '*', //   process.env.FRONTEND_URL,  --------> for production
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("app is working ");
+});
+
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
