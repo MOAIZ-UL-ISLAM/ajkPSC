@@ -5,12 +5,12 @@ import * as jobApplicationController from '../controllers/jobApplicationControll
 const router = Router();
 
 // All routes require authentication
-router.use('/', authMiddleware);
+// router.use('/', authMiddleware);
 
-router.post('/personal-info', jobApplicationController.createPersonalInfo);
-router.post('/:applicationId/education', jobApplicationController.addEducation);
-router.post('/:applicationId/experience', jobApplicationController.addExperience);
-router.post('/:applicationId/submit', jobApplicationController.submitApplication);
-router.get('/:applicationId', jobApplicationController.getApplication);
+router.post('/personal-info', authMiddleware,jobApplicationController.createPersonalInfo);
+router.post('/:applicationId/education',authMiddleware, jobApplicationController.addEducation);
+router.post('/:applicationId/experience',authMiddleware, jobApplicationController.addExperience);
+router.post('/:applicationId/submit', authMiddleware, jobApplicationController.submitApplication);
+router.get('/:applicationId',authMiddleware, jobApplicationController.getApplication);
 
 export default router;

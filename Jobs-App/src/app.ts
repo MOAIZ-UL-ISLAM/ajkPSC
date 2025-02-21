@@ -7,7 +7,9 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-
+app.get("/test", (req, res) => {
+  res.send("app is working ");
+});
 
 app.use(
   cors({
@@ -18,9 +20,7 @@ app.use(
   })
 );
 
-app.get("/test", (req, res) => {
-  res.send("app is working ");
-});
+
 
 
 app.use(express.json());
