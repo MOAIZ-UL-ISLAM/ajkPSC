@@ -13,7 +13,7 @@ app.get("/test", (req, res) => {
 
 app.use(
   cors({
-    origin: '*', //   process.env.FRONTEND_URL,  --------> for production
+    origin: 'http://localhost:3000', //   process.env.FRONTEND_URL,  --------> for production
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
