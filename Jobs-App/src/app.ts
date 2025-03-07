@@ -26,6 +26,6 @@ app.use(
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-app.use("", jobAppRoutes);
+app.use("/api/v1/", jobAppRoutes);
 
 export default app;

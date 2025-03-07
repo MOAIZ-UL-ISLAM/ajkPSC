@@ -3,12 +3,11 @@
 import { ThemeProvider } from 'next-themes'
 import { Provider } from 'react-redux'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQuery } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState } from 'react'
 import { store } from './store/store'
 
-export function Providers({ children }) {
+export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -16,7 +15,8 @@ export function Providers({ children }) {
         refetchOnWindowFocus: false,
       },
     },
-  }))
+  }));
+
 
   return (
     <Provider store={store}>
