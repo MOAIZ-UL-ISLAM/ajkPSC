@@ -21,11 +21,12 @@ app.use(
 );
 
 
+const baseURL =  "/api/v1/";
 
 
 
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/v1/", jobAppRoutes);
+app.use(`${baseURL}auth`, authRoutes);
+app.use(`${baseURL}`, jobAppRoutes);
 
 export default app;

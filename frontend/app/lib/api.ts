@@ -1,7 +1,7 @@
 import axios from "axios";
 import { RegisterData, LoginData, ResetPasswordData } from "@/types/auth";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 const API_URL = `${BASE_URL}/api`;
 
 const api = axios.create({

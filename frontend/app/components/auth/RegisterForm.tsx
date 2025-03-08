@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from '@/lib/api';
-import { RegisterData } from '@/types/auth';
 import { useAppDispatch } from '@/store/hooks';
 import { setCredentials, setError } from '@/store/features/auth/authSlice';
 import { registerSchema } from '@/lib/validators';
