@@ -7,7 +7,13 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -19,7 +25,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { personalInfoSchema } from "@/lib/jobsvalidator";
 import { useAppDispatch } from "@/store/hooks";
@@ -29,15 +41,28 @@ import { updatePersonalDetails } from "@/store/features/jobs/jobSlice";
 type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
 
 // Constants for enums
-const JOB_TYPES = ["Full-Time", "Part-Time", "Contract"] as const;
-const DOMICILES = ["Punjab", "Sindh", "KPK", "Balochistan", "AJK"] as const;
-const GENDERS = ["Male", "Female", "Other"] as const;
-const RELIGIONS = ["Islam", "Christianity", "Hinduism", "Other"] as const;
-
+export const JOB_TYPES = ["clerk", "programmer", "qasid"] as const;
+export const FEE_AMOUNTS = [505, 1005, 1200, "govt-employee"] as const;
+export const DOMICILES = ["Muzaffarabad", "kotli", "mirpur"] as const;
+export const GENDERS = ["male", "female", "other"] as const;
+export const RELIGIONS = [
+  "Islam",
+  "Christianity",
+  "Hinduism",
+  "Other",
+] as const;
+export const EDUCATION_LEVELS = [
+  "matric",
+  "intermediate",
+  "BS",
+  "Mphil",
+  "PhD",
+] as const;
+export const EMPLOYMENT_TYPES = ["govt", "semi govt", "private"] as const;
 // Animation variants
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } }
+  visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 const staggerContainer = {
@@ -46,14 +71,14 @@ const staggerContainer = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+      delayChildren: 0.2,
+    },
+  },
 };
 
 const itemVariant = {
   hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+  visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
 };
 
 export default function PersonalInfoForm() {
@@ -67,7 +92,7 @@ export default function PersonalInfoForm() {
     defaultValues: {
       possessRequiredQualification: false,
       isInGovernmentService: false,
-    }
+    },
   });
 
   const onSubmit = (data: PersonalInfoFormData) => {
@@ -76,34 +101,39 @@ export default function PersonalInfoForm() {
       // Dispatch the form data to Redux store
       dispatch(updatePersonalDetails(data));
       setErrorMessage(null);
-      
+
       // Simulate processing time to show animation
       setTimeout(() => {
         router.push("/education"); // Navigate to the next step
       }, 800);
     } catch (error: any) {
       setIsSubmitting(false);
-      setErrorMessage(error.message || "Failed to submit personal info.")
+      setErrorMessage(error.message || "Failed to submit personal info.");
     }
   };
 
   return (
-    <motion.div 
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-gray-100 p-4 py-10"
+    <motion.div
+      className="min-h-screen flex items-center  justify-center bg-gradient-to-br from-background to-gray-00 p-4 py-10 "
       initial="hidden"
       animate="visible"
       variants={fadeIn}
     >
       <Card className="w-full max-w-[800px] shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Personal Information</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Personal Information
+          </CardTitle>
           <CardDescription className="text-center text-gray-500">
             Please fill in your details to proceed with your application
           </CardDescription>
         </CardHeader>
         <CardContent>
           {errorMessage && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}>
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+            >
               <Alert variant="destructive" className="mb-4">
                 <AlertDescription>{errorMessage}</AlertDescription>
               </Alert>
@@ -111,8 +141,8 @@ export default function PersonalInfoForm() {
           )}
 
           <Form {...form}>
-            <motion.form 
-              onSubmit={form.handleSubmit(onSubmit)} 
+            <motion.form
+              onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6"
               variants={staggerContainer}
               initial="hidden"
@@ -122,7 +152,7 @@ export default function PersonalInfoForm() {
               <motion.div variants={itemVariant}>
                 <h3 className="text-lg font-medium mb-2">Basic Information</h3>
                 <Separator className="mb-4" />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Job Type */}
                   <FormField
@@ -131,7 +161,10 @@ export default function PersonalInfoForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Job Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select job type" />
@@ -158,7 +191,10 @@ export default function PersonalInfoForm() {
                       <FormItem>
                         <FormLabel>CNIC</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your CNIC (e.g., 35202-1234567-1)" {...field} />
+                          <Input
+                            placeholder="Enter your CNIC (e.g., 35202-1234567-1)"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -175,7 +211,10 @@ export default function PersonalInfoForm() {
                       <FormItem>
                         <FormLabel>Applicant Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your full name" {...field} />
+                          <Input
+                            placeholder="Enter your full name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -190,7 +229,10 @@ export default function PersonalInfoForm() {
                       <FormItem>
                         <FormLabel>Father's Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your father's name" {...field} />
+                          <Input
+                            placeholder="Enter your father's name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -198,12 +240,12 @@ export default function PersonalInfoForm() {
                   />
                 </div>
               </motion.div>
-              
+
               {/* Personal Details */}
               <motion.div variants={itemVariant}>
                 <h3 className="text-lg font-medium mb-2">Personal Details</h3>
                 <Separator className="mb-4" />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Date of Birth */}
                   <FormField
@@ -228,7 +270,12 @@ export default function PersonalInfoForm() {
                       <FormItem>
                         <FormLabel>Age</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="Your age in years" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="Your age in years"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value) || "")} 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -244,7 +291,10 @@ export default function PersonalInfoForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Domicile</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select your domicile" />
@@ -270,7 +320,10 @@ export default function PersonalInfoForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Gender</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select your gender" />
@@ -296,7 +349,10 @@ export default function PersonalInfoForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Religion</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select your religion" />
@@ -316,12 +372,12 @@ export default function PersonalInfoForm() {
                   />
                 </div>
               </motion.div>
-              
+
               {/* Fee Details */}
               <motion.div variants={itemVariant}>
                 <h3 className="text-lg font-medium mb-2">Fee Details</h3>
                 <Separator className="mb-4" />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -344,7 +400,13 @@ export default function PersonalInfoForm() {
                       <FormItem>
                         <FormLabel>Fee Amount</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="Enter amount in PKR" {...field} />
+                          <Input
+                            placeholder="Enter amount in PKR"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value) || "")
+                            } // Convert to number
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -352,12 +414,14 @@ export default function PersonalInfoForm() {
                   />
                 </div>
               </motion.div>
-              
+
               {/* Qualifications and Verification */}
               <motion.div variants={itemVariant}>
-                <h3 className="text-lg font-medium mb-2">Qualifications & Service</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  Qualifications & Service
+                </h3>
                 <Separator className="mb-4" />
-                
+
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Transcript Issuance Date */}
@@ -383,14 +447,17 @@ export default function PersonalInfoForm() {
                         <FormItem>
                           <FormLabel>Verification Number</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter verification number" {...field} />
+                            <Input
+                              placeholder="Enter verification number"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Possess Required Qualification */}
                     <FormField
@@ -399,7 +466,9 @@ export default function PersonalInfoForm() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                           <div className="space-y-0.5">
-                            <FormLabel>Possess Required Qualification</FormLabel>
+                            <FormLabel>
+                              Possess Required Qualification
+                            </FormLabel>
                           </div>
                           <FormControl>
                             <Switch
@@ -419,7 +488,9 @@ export default function PersonalInfoForm() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                           <div className="space-y-0.5">
-                            <FormLabel>Currently in Government Service</FormLabel>
+                            <FormLabel>
+                              Currently in Government Service
+                            </FormLabel>
                           </div>
                           <FormControl>
                             <Switch
@@ -436,24 +507,40 @@ export default function PersonalInfoForm() {
               </motion.div>
 
               {/* Submit Button */}
-              <motion.div 
+              <motion.div
                 className="flex justify-end pt-2"
                 variants={itemVariant}
               >
-                <motion.div 
-                  whileHover={{ scale: 1.02 }} 
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="bg-primary hover:bg-primary/90 px-8"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <div className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Submitting...
                       </div>
@@ -468,5 +555,5 @@ export default function PersonalInfoForm() {
         </CardContent>
       </Card>
     </motion.div>
-  )
+  );
 }

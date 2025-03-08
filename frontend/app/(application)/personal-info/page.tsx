@@ -8,10 +8,7 @@ import { Stepper } from "@/components/auth/ui/Stepper";
 export default function PersonalInfoPage() {
   return (
     <>
-      <FormLayout>
-        {/* <Stepper activeStep={0} /> */}
-        <PersonalInfoForm />
-      </FormLayout>
+      <PersonalInfoForm />
     </>
   );
 }

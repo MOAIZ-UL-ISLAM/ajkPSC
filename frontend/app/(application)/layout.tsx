@@ -10,7 +10,7 @@ interface FormLayoutProps {
 
 export default function FormLayout({ children }: FormLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-10">
+    <div className="min-h-screen  flex items-center justify-center bg-gradient-to-b from-background to-muted/30 py-10">
       <div className="container max-w-4xl">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
