@@ -34,8 +34,8 @@ export const educationSchema = z.object({
   attendedFrom: z.string().transform((str) => new Date(str)),
   attendedTill: z.string().transform((str) => new Date(str)),
   boardOrUniversityName: z.string().min(2),
-  obtainedMarks: z.number().min(0),
-  totalMarks: z.number().min(0),
+  obtainedMarks: z.preprocess((val) => Number(val), z.number().min(0)),
+  totalMarks: z.preprocess((val) => Number(val), z.number().min(1)),  
   percentage: z.number().min(0).max(100)
 });
 

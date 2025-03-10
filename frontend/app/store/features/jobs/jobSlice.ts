@@ -1,39 +1,69 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store"; // Assuming you have a store file
-import axios from "axios";
+import { configureStore, createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { jobApplicationApi } from "@/lib/jobapi";
+import  {RootState}  from "@/store/store";
+import { IPersonalInfo, IEducation, IExperience } from "@/types/jobTypes";
 
-// Define the initial state
-interface FormState {
-  personalDetails: Record<string, any>;
-  educationalDetails: Record<string, any>;
-  experience: Record<string, any>;
+// Define FormState interface
+export interface FormState {
+  currentStep: number;
+  personalInfo: IPersonalInfo;
+  educations: IEducation[];
+  experiences: IExperience[];
+  formSubmitted: boolean;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: FormState = {
-  personalDetails: {},
-  educationalDetails: {},
-  experience: {},
+  currentStep: 1,
+  personalInfo: {
+    jobType: "" as IPersonalInfo["jobType"],
+    feeDepositDate: new Date(),
+    feeAmount: "" as IPersonalInfo["feeAmount"],
+    cnic: "",
+    applicantName: "",
+    fatherName: "",
+    age: 0,
+    dateOfBirth: new Date(),
+    domicile: "" as IPersonalInfo["domicile"],
+    gender: "" as IPersonalInfo["gender"],
+    religion: "" as IPersonalInfo["religion"],
+    possessRequiredQualification: false,
+    transcriptIssuanceDate: new Date(),
+    isInGovernmentService: false,
+    verificationNumber: "",
+  },
+  educations: [],
+  experiences: [],
+  formSubmitted: false,
   loading: false,
   error: null,
 };
 
-// Async thunk for submitting data in order
-export const submitFormData = createAsyncThunk(
+// Async thunk to submit form in sequence
+export  const submitFormData = createAsyncThunk(
   "form/submitFormData",
   async (_, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
-    const { personalDetails, educationalDetails, experience } = state.form;
-    const { token } = state.auth;
+    const state = getState() ;
+    const { personalInfo, educations, experiences } = state.form;
 
     try {
-      // API request with authentication token
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      // Step 1: Submit personal info
+      const personalResponse = await jobApplicationApi.createPersonalInfo(personalInfo);
+      const applicationId = personalResponse.id; // Assuming response contains application ID
 
-      await axios.post("/personaldetails", personalDetails, config);
-      await axios.post("/educationaldetails", educationalDetails, config);
-      await axios.post("/experience", experience, config);
+      // Step 2: Submit education details
+      for (const edu of educations) {
+        await jobApplicationApi.addEducation(applicationId, edu);
+      }
+
+      // Step 3: Submit experience details
+      for (const exp of experiences) {
+        await jobApplicationApi.addExperience(applicationId, exp);
+      }
+
+      // Step 4: Final submission
+      await jobApplicationApi.submitApplication(applicationId);
 
       return "Success";
     } catch (error: any) {
@@ -42,35 +72,43 @@ export const submitFormData = createAsyncThunk(
   }
 );
 
-const formSlice = createSlice({
-  name: "jobform",
+
+export const formSlice = createSlice({
+  name: "form",
   initialState,
   reducers: {
-    updatePersonalDetails: (
-      state,
-      action: PayloadAction<Record<string, any>>
-    ) => {
-      state.personalDetails = action.payload;
+    setCurrentStep: (state, action: PayloadAction<number>) => {
+      state.currentStep = action.payload;
     },
-    updateEducationalDetails: (
-      state,
-      action: PayloadAction<Record<string, any>>
-    ) => {
-      state.educationalDetails = action.payload;
+    setPersonalInfo: (state, action: PayloadAction<IPersonalInfo>) => {
+      state.personalInfo = action.payload;
     },
-    updateExperience: (state, action: PayloadAction<Record<string, any>>) => {
-      state.experience = action.payload;
+    addEducation: (state, action: PayloadAction<IEducation>) => {
+      state.educations.push(action.payload);
     },
-
-    resetForm: (state) => {
-      state.personalDetails = {};
-      state.educationalDetails = {};
-      state.experience = {};
-      state.loading = false;
-      state.error = null;
+    updateEducation: (state, action: PayloadAction<IEducation>) => {
+      const index = state.educations.findIndex((edu) => edu.id === action.payload.id);
+      if (index !== -1) {
+        state.educations[index] = action.payload;
+      }
     },
+    removeEducation: (state, action: PayloadAction<string>) => {
+      state.educations = state.educations.filter((edu) => edu.id !== action.payload);
+    },
+    addExperience: (state, action: PayloadAction<IExperience>) => {
+      state.experiences.push(action.payload);
+    },
+    updateExperience: (state, action: PayloadAction<IExperience>) => {
+      const index = state.experiences.findIndex((exp) => exp.id === action.payload.id);
+      if (index !== -1) {
+        state.experiences[index] = action.payload;
+      }
+    },
+    removeExperience: (state, action: PayloadAction<string>) => {
+      state.experiences = state.experiences.filter((exp) => exp.id !== action.payload);
+    },
+    resetForm: () => initialState,
   },
-
   extraReducers: (builder) => {
     builder
       .addCase(submitFormData.pending, (state) => {
@@ -79,6 +117,7 @@ const formSlice = createSlice({
       })
       .addCase(submitFormData.fulfilled, (state) => {
         state.loading = false;
+        state.formSubmitted = true;
       })
       .addCase(submitFormData.rejected, (state, action) => {
         state.loading = false;
@@ -87,9 +126,26 @@ const formSlice = createSlice({
   },
 });
 
+
+
+
 export const {
-  updatePersonalDetails,
-  updateEducationalDetails,
+  setCurrentStep,
+  setPersonalInfo,
+  addEducation,
+  updateEducation,
+  removeEducation,
+  addExperience,
   updateExperience,
+  removeExperience,
+  resetForm,
 } = formSlice.actions;
-export default formSlice.reducer;
+
+export  const store = configureStore({
+  reducer: {
+    form: formSlice.reducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

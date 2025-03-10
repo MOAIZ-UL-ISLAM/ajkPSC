@@ -4,7 +4,7 @@ type Domicile = 'Muzaffarabad' | 'kotli' | 'mirpur';
 type Gender = 'male' | 'female' | 'other';
 type Religion = 'Islam' | 'Christianity' | 'Hinduism' | 'Other';
 
-interface IPersonalInfo {
+ export interface IPersonalInfo {
   jobType: JobType;
   feeDepositDate: Date;
   feeAmount: FeeAmount;
@@ -24,7 +24,8 @@ interface IPersonalInfo {
 
 type EducationLevel = 'matric' | 'intermediate' | 'BS' | 'Mphil' | 'PhD';
 
-interface IEducation {
+export interface IEducation {
+  id: string;
   level: EducationLevel;
   instituteName: string;
   attendedFrom: Date;
@@ -37,7 +38,8 @@ interface IEducation {
 
 type EmploymentType = 'govt' | 'semi govt' | 'private';
 
-interface IExperience {
+export interface IExperience {
+  id: string;
   companyName: string;
   fromYear: Date;
   tillYear: Date;
@@ -46,7 +48,7 @@ interface IExperience {
 
 type JobApplicationStatus = 'draft' | 'submitted' | 'under-review' | 'approved' | 'rejected';
 
-interface IJobApplication extends Document {
+export interface IJobApplication extends Document {
   userId: string;
   personalInfo: IPersonalInfo;
   education: IEducation[];

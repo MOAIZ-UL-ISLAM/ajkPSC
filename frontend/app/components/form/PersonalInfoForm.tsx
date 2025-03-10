@@ -35,7 +35,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { personalInfoSchema } from "@/lib/jobsvalidator";
 import { useAppDispatch } from "@/store/hooks";
-import { updatePersonalDetails } from "@/store/features/jobs/jobSlice";
+// import { updatePersonalDetails } from "@/store/features/jobs/jobSlice";
 
 // Define types
 type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
